@@ -1,0 +1,155 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+//definindo o nodo
+typedef struct sNodo{
+    int dado;
+    struct sNodo* next;
+} Nodo;
+
+//definindo lista com head, tail e tamanho
+typedef struct sLista{
+    struct sLista *head;
+    struct sLista *tail;
+    int size;
+} Lista;
+
+//prototipação
+Nodo* alocaMemoriaNodo();
+Lista* alocaMemoriaLista();
+Nodo* criaNodo(int);
+Lista* criaLista(int);
+int insereElementoNaLista(Lista* lista, Nodo* pivo, int);
+void percorreListaHeadTail(Lista* lista);
+int removeElementoNaLista (Lista*lista, Nodo*pivo);
+int encontraElementoNaLista(Lista* lista, Nodo* elementoDesejado);
+
+int main(){
+  Lista * lista1;
+
+  lista1 =alocaMemoriaLista();
+  insereElementoNaLista(lista1, NULL, 10);
+  insereElementoNaLista(lista1, lista1->head, 5);
+  insereElementoNaLista(lista1, lista1->tail, 7);
+  insereElementoNaLista(lista1, NULL, 19);
+  insereElementoNaLista(lista1, lista1->head, 22);
+  //removeElementoNaLista(lista1, lista1 -> head);
+  //encontraElementoNaLista(lista1, lista1 -> tail);
+
+  percorreListaHeadTail(lista1);
+
+  return 0;
+  
+}
+
+
+//alocando memoria para o nodo e para lista
+Nodo* alocaMemoriaNodo(){
+  return (Nodo*)malloc(sizeof(Nodo));
+}
+
+Lista* alocaMemoriaLista(){
+  return (Lista*)malloc(sizeof(Lista));
+}
+
+
+Nodo* criaNodo(int dado){
+  Nodo* nodo = alocaMemoriaNodo();
+  if(nodo != NULL){
+    nodo -> dado = dado;
+    nodo -> next = NULL;
+  }
+    return nodo;
+}
+
+Lista* criaLista(){
+  Lista* lista = alocaMemoriaLista();
+  if (lista != NULL){
+    lista-> head = NULL;
+    lista-> tail = NULL;
+    lista-> size = 0;
+  }
+  return lista;
+}
+
+int insereElementoNaLista(Lista* lista, Nodo* pivo, int dado){
+  Nodo* novo = criaNodo(dado);
+  if (novo ==NULL){
+    return -1;//retorna erro
+  }
+	if (pivo == NULL){
+      if(lista->size ==0){
+        lista -> tail = novo;
+      }
+      
+      novo->next = lista->head;
+      lista->head = novo;
+  }else{
+      if(pivo->next ==NULL){
+        lista->tail = novo;
+      }
+      
+      novo -> next = pivo->next;
+      pivo->next = novo;
+  }
+  lista->size++;
+  return lista->size;
+  }
+int removeElementoNaLista (Lista*lista, Nodo*pivo){
+  pivo = lista->head;
+  Nodo*elementoAntigo ;
+  
+    if(lista -> size == 0){
+      printf("Sua lista está vazia!");
+      return 0;
+    } else 
+      if(pivo == NULL){
+      elementoAntigo = lista->head;
+		  lista->head = elementoAntigo->next;
+      if (elementoAntigo == NULL){
+        printf("Sua lista agora está vazia!");
+        return 0;
+      }
+    } else if (pivo != NULL){
+       if(pivo == lista ->tail){
+         printf("Elemento pivô já é o ultimo da lista");
+       } else{
+         elementoAntigo = pivo ->next;
+         pivo -> next = elementoAntigo -> next;
+         if(pivo -> next == NULL){
+           lista ->tail = pivo;
+         }
+         free(elementoAntigo);
+       }
+      
+      }
+  lista->size = lista ->size -1;
+}
+
+void percorreListaHeadTail(Lista*lista){
+  Nodo* nodo = lista->head;
+  if(nodo != NULL){
+  while(nodo != NULL){
+    printf("%i, ", nodo ->dado);
+    nodo = nodo->next;
+  }
+  printf("Fim da lista");
+  } else{
+  printf("Lista está vazia");
+  }
+}
+
+int encontraElementoNaLista(Lista*lista,Nodo* elementoDesejado){
+  Nodo * nodo = lista -> head;
+  if(nodo != NULL){
+    while (nodo != NULL){
+      if(nodo == elementoDesejado){
+        printf("O elemento desejado é %i", *nodo);
+        return 0;
+      }
+      nodo = nodo->next;
+    }
+  } else{
+    printf("Sua lista está vazia");
+  }
+}
