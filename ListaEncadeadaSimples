@@ -33,8 +33,8 @@ int main(){
   insereElementoNaLista(lista1, lista1->tail, 7);
   insereElementoNaLista(lista1, NULL, 19);
   insereElementoNaLista(lista1, lista1->head, 22);
-  //removeElementoNaLista(lista1, lista1 -> head);
-  //encontraElementoNaLista(lista1, lista1 -> tail);
+  removeElementoNaLista(lista1, lista1 -> head);
+  encontraElementoNaLista(lista1, lista1 -> tail);
 
   percorreListaHeadTail(lista1);
 
