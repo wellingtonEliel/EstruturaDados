@@ -26,6 +26,7 @@ Lista *criaLista ();
 int insereElementoNaLista (Lista *, Nodo *, int);
 void percorreListaHeadTail (Lista * lista);
 Nodo *encontraElementoNaLista (Lista * lista, int);
+Nodo *encontraElementoNaListaTail(Lista* lista, int);
 int removeElementoNaLista (Lista *, Nodo *);
 
 
@@ -33,6 +34,7 @@ int main (){
   Lista *lista1;
 
   Nodo *nodo;
+  Nodo *nodo1;
   lista1 = alocaMemoriaLista ();
   insereElementoNaLista (lista1, NULL, 10);
   insereElementoNaLista (lista1, lista1->head, 25);
@@ -41,13 +43,14 @@ int main (){
   insereElementoNaLista(lista1, lista1 -> tail, 90);
   insereElementoNaLista(lista1, lista1 -> tail, 13);
   insereElementoNaLista(lista1, lista1 -> tail, 24);
-  nodo = encontraElementoNaLista (lista1, 35);
+  nodo = encontraElementoNaLista (lista1, 90);
   if (nodo != NULL){
       removeElementoNaLista (lista1, nodo);
     }
   percorreListaHeadTail (lista1);
   return 0;
 }
+  nodo1 = encontraElementoNaLista(lista1, 55);
 
 //alocando memoria para o nodo e para lista
 Nodo * alocaMemoriaNodo (){
@@ -113,6 +116,22 @@ Nodo * encontraElementoNaLista (Lista * lista, int dado){
 	      return nodo;
 	    }
 	  nodo = nodo->next;
+	}
+    return NULL;
+  }else{
+    return NULL;
+  }
+}
+
+Nodo * encontraElementoNaListaTail (Lista * lista, int dado){
+  Nodo *nodo = lista->tail;
+
+  if (nodo != NULL){
+    while (nodo != NULL){
+	  if (nodo->dado == dado){
+	      return nodo;
+	    }
+	  nodo = nodo->prev;
 	}
     return NULL;
   }else{
