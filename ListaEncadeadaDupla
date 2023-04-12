@@ -1,6 +1,5 @@
 
 #include <stdio.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -26,7 +25,6 @@ Lista *criaLista ();
 int insereElementoNaLista (Lista *, Nodo *, int);
 void percorreListaHeadTail (Lista * lista);
 Nodo *encontraElementoNaLista (Lista * lista, int);
-Nodo *encontraElementoNaListaTail(Lista* lista, int);
 int removeElementoNaLista (Lista *, Nodo *);
 
 
@@ -50,7 +48,6 @@ int main (){
   percorreListaHeadTail (lista1);
   return 0;
 }
-  nodo1 = encontraElementoNaLista(lista1, 55);
 
 //alocando memoria para o nodo e para lista
 Nodo * alocaMemoriaNodo (){
@@ -90,8 +87,7 @@ int insereElementoNaLista (Lista * lista, Nodo * pivo, int dado){
   novo->dado = dado;
   if (lista->size == 0){
       lista->head = novo;
-      novo->next = NULL;
-      novo->prev = NULL;
+      lista->tail = novo;
     }else{
       novo->next = pivo->next;
       novo->prev = pivo;
@@ -123,21 +119,6 @@ Nodo * encontraElementoNaLista (Lista * lista, int dado){
   }
 }
 
-Nodo * encontraElementoNaListaTail (Lista * lista, int dado){
-  Nodo *nodo = lista->tail;
-
-  if (nodo != NULL){
-    while (nodo != NULL){
-	  if (nodo->dado == dado){
-	      return nodo;
-	    }
-	  nodo = nodo->prev;
-	}
-    return NULL;
-  }else{
-    return NULL;
-  }
-}
 
 int removeElementoNaLista (Lista * lista, Nodo * elementoAntigo) {
 
@@ -167,8 +148,6 @@ int removeElementoNaLista (Lista * lista, Nodo * elementoAntigo) {
     }
 }
 
-
-
 void percorreListaHeadTail (Lista * lista){
   Nodo *nodo = lista->head;
   if (nodo != NULL){
@@ -181,3 +160,4 @@ void percorreListaHeadTail (Lista * lista){
       printf ("Lista está vazia");
   }
 }
+
