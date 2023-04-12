@@ -1,0 +1,146 @@
+
+#include <stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#define TAM 30
+
+//definindo o nodo
+typedef struct sNodo{
+    char dado;
+    struct sNodo *next;
+    struct sNodo *prev;
+} Nodo;
+
+//definindo lista com head, tail e tamanho
+typedef struct sLista{
+    struct sNodo *head;
+    struct sNodo *tail;
+    int size;
+} Lista;
+
+//prototipaC'C#o
+Nodo *alocaMemoriaNodo ();
+Lista *alocaMemoriaLista ();
+Nodo *criaNodo (char);
+Lista *criaLista ();
+int insereElementoNaLista (Lista *, Nodo *, char);
+int removeElementoNaLista(Lista *, Nodo *);
+void percorreListaHeadTail (Lista * lista);
+
+int main (){
+    Lista *lista1;
+    lista1 = alocaMemoriaLista ();
+    printf("Digite a expressão:\n");
+    char expre [TAM];
+    scanf("%s", expre);
+    for (int i=0; i<TAM; i++){
+        if(expre [i] == '(' || expre[i] == '[' || expre[i] == '{'){
+            insereElementoNaLista(lista1, lista1->tail, expre[i]);
+        } else if(expre[i] == ')'||expre[i] == ']'||expre[i] == '}'){
+            if(expre[i] == ')' && lista1->tail->dado == '('){
+                removeElementoNaLista(lista1, lista1->tail);  
+            }else if(expre[i] == ']' && lista1->tail->dado == '['){
+                removeElementoNaLista(lista1, lista1->tail);  
+            }else if(expre[i] == '}' && lista1->tail->dado == '{'){
+                removeElementoNaLista(lista1, lista1->tail);  
+            }else{
+                printf("\nA expressão está incorreta");
+                return -1;
+            }
+        }
+    }
+    
+    if(lista1->size == 0){
+        printf("\nA expressão está correta");
+    } else{
+        printf("\nA expressão está incorreta, faltaram elementos");
+    }
+    return 0;
+}
+
+//alocando memoria para o nodo e para lista
+Nodo * alocaMemoriaNodo (){
+    return (Nodo *) malloc (sizeof (Nodo));
+}
+
+Lista *alocaMemoriaLista (){
+    return (Lista *) malloc (sizeof (Lista));
+}
+
+Nodo *criaNodo (char dado){
+    Nodo *nodo = alocaMemoriaNodo ();
+    if (nodo != NULL){
+        nodo->dado = dado;
+        nodo->next = NULL;
+        nodo->prev = NULL;
+    }
+    return nodo;
+}
+
+Lista *criaLista (){
+    Lista *lista = alocaMemoriaLista ();
+    if (lista != NULL){
+        lista->head = NULL;
+        lista->tail = NULL;
+        lista->size = 0;
+    }
+    return lista;
+}
+
+int insereElementoNaLista (Lista * lista, Nodo * pivo, char dado){
+    Nodo *novo = criaNodo (dado);
+    novo->dado = dado;
+    if (lista->size == 0){
+        lista->head = novo;
+        lista->tail = novo;
+    }else{
+        novo->next = pivo->next;
+        novo->prev = pivo;
+        
+        if (pivo->next == NULL){
+            lista->tail = novo;
+        }else{
+            pivo->next->prev = novo;
+        }
+            pivo->next = novo;
+    }
+    lista->size++;
+    return lista->size;
+}
+
+void percorreListaHeadTail (Lista * lista){
+    Nodo *nodo = lista->head;
+    if (nodo != NULL){
+        while (nodo != NULL){
+            printf ("%c, ", nodo->dado);
+            nodo = nodo->next;
+        }
+    }
+}
+
+int removeElementoNaLista(Lista *lista, Nodo * elementoAntigo){
+    if (lista->size == 0){
+        return 0;
+    }else if (elementoAntigo == NULL){
+        return 0;
+    }else {
+        if (lista->head == elementoAntigo){
+            lista->head = elementoAntigo->next;
+            if (lista->head == NULL){
+                lista->tail == NULL;
+            }else{
+                elementoAntigo->next->prev = NULL;
+            }
+        }else{
+            elementoAntigo->prev->next = elementoAntigo->next;
+            if (elementoAntigo->next == NULL){
+                lista->tail = elementoAntigo->prev;
+            }else{
+                elementoAntigo->next->prev = elementoAntigo->prev;
+            }
+        }
+        free (elementoAntigo);
+        lista->size--;
+        return 1;
+    }
+}
