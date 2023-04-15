@@ -25,22 +25,15 @@ Nodo *criaNodo (char);
 Lista *criaLista ();
 int insereElementoNaLista (Lista *, Nodo *, char);
 int removeElementoNaLista(Lista *, Nodo *);
-int verificaExpre(Lista *, char);
+int verificaExpre(Lista *, char * expre);
 
 int main (){
     Lista *lista1;
     lista1 = alocaMemoriaLista ();
-    printf("Digite a expressão:\n");
+    printf("Digite a expressão: ");
     char expre [TAM];
     scanf("%s", expre);
-    for (int i=0; i<TAM; i++){
-         verificaExpre(lista1, expre[i]);
-    }
-        if(lista1->size == 0){
-            printf("\nA expressão está correta");
-        } else{
-            printf("\nA expressão está incorreta");
-        }
+    verificaExpre(lista1, expre);
     return 0;
 }
 
@@ -122,23 +115,30 @@ int removeElementoNaLista(Lista *lista, Nodo * elementoAntigo){
     }
 }
 
-int verificaExpre(Lista * lista, char expre){
-    if(expre == '(' || expre == '[' || expre == '{'){
-            insereElementoNaLista(lista, lista->tail, expre);
-            return 0;
-        } else if(expre == ')'||expre == ']'||expre == '}'){
-            if(expre == ')' && lista->tail->dado == '('){
+int verificaExpre(Lista * lista, char *expre){
+    for (int i=0; i<TAM; i++){
+        if(expre[i] == '(' || expre[i] == '[' || expre[i] == '{'){
+            insereElementoNaLista(lista, lista->tail, expre[i]);
+        } else if(expre[i] == ')'||expre[i] == ']'||expre[i] == '}'){
+            if(expre[i] == ')' && lista->tail->dado == '('){
                 removeElementoNaLista(lista, lista->tail);
-                return 0;
-            }else if(expre == ']' && lista->tail->dado == '['){
+            }else if(expre[i] == ']' && lista->tail->dado == '['){
                 removeElementoNaLista(lista, lista->tail);  
-                return 0;
-            }else if(expre == '}' && lista->tail->dado == '{'){
+            }else if(expre[i] == '}' && lista->tail->dado == '{'){
                 removeElementoNaLista(lista, lista->tail);  
-                return 0;
             }else{
-                printf("\nA expressão está incorreta");
+                if(expre[i] == '(' || expre[i] == '[' || expre[i] == '{'){
+                    printf("\nA expressão está incorreta, diferença de escopos");
+                }else{
+                    printf("\nA expressão está incorreta, erro de underflow");
+                }
                 return -1;
             }
         }
+    }
+    if(lista->size == 0){
+        printf("\nA expressão está correta");
+    }else{
+        printf("\nA expressão está incorreta, faltaram elementos");
+    }
 }
