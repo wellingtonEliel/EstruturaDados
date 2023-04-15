@@ -1,4 +1,5 @@
 
+
 #include <stdio.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,7 +26,7 @@ Nodo *criaNodo (char);
 Lista *criaLista ();
 int insereElementoNaLista (Lista *, Nodo *, char);
 int removeElementoNaLista(Lista *, Nodo *);
-void percorreListaHeadTail (Lista * lista);
+int verificaExpre(Lista *, char);
 
 int main (){
     Lista *lista1;
@@ -33,27 +34,16 @@ int main (){
     printf("Digite a expressão:\n");
     char expre [TAM];
     scanf("%s", expre);
+    int teste = 0;
     for (int i=0; i<TAM; i++){
-        if(expre [i] == '(' || expre[i] == '[' || expre[i] == '{'){
-            insereElementoNaLista(lista1, lista1->tail, expre[i]);
-        } else if(expre[i] == ')'||expre[i] == ']'||expre[i] == '}'){
-            if(expre[i] == ')' && lista1->tail->dado == '('){
-                removeElementoNaLista(lista1, lista1->tail);  
-            }else if(expre[i] == ']' && lista1->tail->dado == '['){
-                removeElementoNaLista(lista1, lista1->tail);  
-            }else if(expre[i] == '}' && lista1->tail->dado == '{'){
-                removeElementoNaLista(lista1, lista1->tail);  
-            }else{
-                printf("\nA expressão está incorreta");
-                return -1;
-            }
-        }
+        teste = verificaExpre(lista1, expre[i]);
     }
-    
-    if(lista1->size == 0){
-        printf("\nA expressão está correta");
-    } else{
-        printf("\nA expressão está incorreta, faltaram elementos");
+    if(teste == 0){
+        if(lista1->size == 0){
+            printf("\nA expressão está correta");
+        } else{
+            printf("\nA expressão está incorreta, faltaram elementos");
+        }
     }
     return 0;
 }
@@ -108,15 +98,6 @@ int insereElementoNaLista (Lista * lista, Nodo * pivo, char dado){
     return lista->size;
 }
 
-void percorreListaHeadTail (Lista * lista){
-    Nodo *nodo = lista->head;
-    if (nodo != NULL){
-        while (nodo != NULL){
-            printf ("%c, ", nodo->dado);
-            nodo = nodo->next;
-        }
-    }
-}
 
 int removeElementoNaLista(Lista *lista, Nodo * elementoAntigo){
     if (lista->size == 0){
@@ -143,4 +124,25 @@ int removeElementoNaLista(Lista *lista, Nodo * elementoAntigo){
         lista->size--;
         return 1;
     }
+}
+
+int verificaExpre(Lista * lista, char expre){
+    if(expre == '(' || expre == '[' || expre == '{'){
+            insereElementoNaLista(lista, lista->tail, expre);
+            return 0;
+        } else if(expre == ')'||expre == ']'||expre == '}'){
+            if(expre == ')' && lista->tail->dado == '('){
+                removeElementoNaLista(lista, lista->tail);
+                return 0;
+            }else if(expre == ']' && lista->tail->dado == '['){
+                removeElementoNaLista(lista, lista->tail);  
+                return 0;
+            }else if(expre == '}' && lista->tail->dado == '{'){
+                removeElementoNaLista(lista, lista->tail);  
+                return 0;
+            }else{
+                printf("\nA expressão está incorreta, erro de underflow");
+                return -1;
+            }
+        }
 }
