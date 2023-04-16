@@ -1,0 +1,178 @@
+
+#include <stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+//definindo o nodo
+typedef struct sNodo{
+  int dado;
+  struct sNodo *next;
+  struct sNodo *prev;
+} Nodo;
+
+//definindo lista com head, tail e tamanho
+typedef struct sLista{
+  struct sNodo *head;
+  struct sNodo *tail;
+  int size;
+} Lista;
+
+//prototipaC'C#o
+Nodo *alocaMemoriaNodo ();
+Lista *alocaMemoriaLista ();
+Nodo *criaNodo (int);
+Lista *criaLista ();
+int insereElementoNaLista (Lista *, Nodo *, int);
+void percorreListaHeadTail (Lista * lista);
+Nodo *encontraMenorElementoNaLista (Lista * lista);
+int removeElementoNaLista (Lista *, Nodo *);
+void pqEmpty(Lista *);
+
+
+int main (){
+  Lista *lista1;
+
+  Nodo *nodo;
+  Nodo *nodo1;
+  lista1 = alocaMemoriaLista ();
+  insereElementoNaLista(lista1, lista1 -> tail, 20);
+  insereElementoNaLista(lista1, lista1 -> tail, 13);
+  insereElementoNaLista(lista1, lista1 -> tail, 4);
+  insereElementoNaLista(lista1, lista1 -> tail, 2);
+  insereElementoNaLista(lista1, lista1 -> tail, 18);
+  insereElementoNaLista(lista1, lista1 -> tail, 40);
+  insereElementoNaLista(lista1, lista1 -> tail, 2);
+  insereElementoNaLista(lista1, lista1 -> tail, 19);
+  insereElementoNaLista(lista1, lista1 -> tail, 1);
+  pqEmpty(lista1);
+  percorreListaHeadTail (lista1);
+  nodo = encontraMenorElementoNaLista (lista1);
+  if (nodo != NULL){
+      removeElementoNaLista (lista1, nodo);
+    }
+  percorreListaHeadTail (lista1);
+  return 0;
+}
+
+//alocando memoria para o nodo e para lista
+Nodo * alocaMemoriaNodo (){
+  return (Nodo *) malloc (sizeof (Nodo));
+}
+
+Lista *alocaMemoriaLista (){
+  return (Lista *) malloc (sizeof (Lista));
+}
+
+Nodo *criaNodo (int dado){
+  Nodo *nodo = alocaMemoriaNodo ();
+  if (nodo != NULL){
+      nodo->dado = dado;
+      nodo->next = NULL;
+      nodo->prev = NULL;
+    }
+  return nodo;
+}
+
+Lista *criaLista (){
+  Lista *lista = alocaMemoriaLista ();
+  if (lista != NULL){
+      lista->head = NULL;
+      lista->tail = NULL;
+      lista->size = 0;
+    }
+  return lista;
+}
+
+void pqEmpty(Lista * lista){
+    if(lista->size == 0){
+        printf("\nSua lista está vazia\n");
+    } else{
+        printf("\nSua lista contém elementos\n");
+    }
+}
+
+int insereElementoNaLista (Lista * lista, Nodo * pivo, int dado){
+  Nodo *novo = criaNodo (dado);
+  if (pivo == NULL && lista->size != 0){
+      printf ("Elemento pivo só pode ser nulo no primeiro elemento\n");
+      return 0;
+    }
+  novo->dado = dado;
+  if (lista->size == 0){
+      lista->head = novo;
+      lista->tail = novo;
+    }else{
+      novo->next = pivo->next;
+      novo->prev = pivo;
+
+      if (pivo->next == NULL){
+	    lista->tail = novo;
+	  }else{
+	    pivo->next->prev = novo;
+	  }
+      pivo->next = novo;
+    }
+  lista->size++;
+  return lista->size;
+}
+
+Nodo * encontraMenorElementoNaLista (Lista * lista){
+  Nodo *nodo = lista->head;
+  Nodo *aux = lista->head->next;
+
+  if (nodo != NULL){
+    while (aux != NULL){
+	  if (nodo->dado > aux->dado){
+	      nodo = aux;
+	    }
+	  aux = aux->next;
+	}
+    return nodo;
+  }else{
+    printf("\nLista está vazia");
+    return NULL;
+  }
+}
+
+
+int removeElementoNaLista (Lista * lista, Nodo * elementoAntigo) {
+
+  if (lista->size == 0){
+      return 0;
+    }else if (elementoAntigo == NULL){
+      return 0;
+    }else {
+      if (lista->head == elementoAntigo){
+    	  lista->head = elementoAntigo->next;
+    	  if (lista->head == NULL){
+    	      lista->tail == NULL;
+    	  }else{
+    	      elementoAntigo->next->prev = NULL;
+    	  }
+	  }else{
+    	  elementoAntigo->prev->next = elementoAntigo->next;
+    	  if (elementoAntigo->next == NULL){
+    	      lista->tail = elementoAntigo->prev;
+    	  }else{
+    	     elementoAntigo->next->prev = elementoAntigo->prev;
+    	  }
+	  }
+	  printf("\nMenor elemento da lista: %i foi removido\n", elementoAntigo->dado);
+      free (elementoAntigo);
+      lista->size--;
+      return 1;
+    }
+}
+
+void percorreListaHeadTail (Lista * lista){
+  Nodo *nodo = lista->head;
+  if (nodo != NULL){
+    while (nodo != NULL){
+	  printf ("%i, ", nodo->dado);
+	  nodo = nodo->next;
+	}
+      printf ("Fim da lista");
+  }else{
+      printf ("Lista está vazia");
+  }
+}
