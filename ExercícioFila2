@@ -3,21 +3,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//definindo o nodo
 typedef struct sNodo{
   int dado;
   struct sNodo *next;
   struct sNodo *prev;
 } Nodo;
 
-//definindo lista com head, tail e tamanho
 typedef struct sLista{
   struct sNodo *head;
   struct sNodo *tail;
   int size;
 } Lista;
 
-//prototipaC'C#o
 Nodo *alocaMemoriaNodo ();
 Lista *alocaMemoriaLista ();
 Nodo *criaNodo (int);
@@ -54,7 +51,6 @@ int main (){
   return 0;
 }
 
-//alocando memoria para o nodo e para lista
 Nodo * alocaMemoriaNodo (){
   return (Nodo *) malloc (sizeof (Nodo));
 }
