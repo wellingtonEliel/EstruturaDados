@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,20 +30,20 @@ int main (){
     Lista *lista1;
     lista1 = alocaMemoriaLista ();
     printf("Expressão A: (A + B} )");
-    char expre [TAM] = "(A + B} )";
+    char *expre = "(A + B} )";
     verificaExpre(lista1, expre);
     printf("\nExpressão B: {[A + B] - [(C - D)]");
-    char expre2 [TAM] = "{[A + B] - [(C - D)]";
-    verificaExpre(lista1, expre2);
+    expre = "{[A + B] - [(C - D)]";
+    verificaExpre(lista1, expre);
     printf("\nExpressão C: (A + B)-{C + D}-[F+ G]");
-    char expre3 [TAM] = "(A + B)-{C + D}-[F+ G]";
-    verificaExpre(lista1, expre3);
+    expre = "(A + B)-{C + D}-[F+ G]";
+    verificaExpre(lista1, expre);
     printf("\nExpressão D: ((H) * {([J + K])})");
-    char expre4 [TAM] = "((H) * {([J + K])})";
-    verificaExpre(lista1, expre4);
+    expre = "((H) * {([J + K])})";
+    verificaExpre(lista1, expre);
     printf("\nExpressão E: (((A))))");
-    char expre5 [TAM] = "(((A))))";
-    verificaExpre(lista1, expre5);
+    expre = "(((A))))";
+    verificaExpre(lista1, expre);
     return 0;
 }
 
@@ -156,3 +155,5 @@ int verificaExpre(Lista * lista, char *expre){
         printf("\nA expressão está incorreta, faltaram elementos");
     }
 }
+
+
