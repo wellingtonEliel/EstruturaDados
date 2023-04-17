@@ -1,20 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//definindo o nodo
 typedef struct sNodo{
     int dado;
     struct sNodo* next;
 } Nodo;
 
-//definindo lista com head, tail e tamanho
 typedef struct sLista{
     struct sLista *head;
     struct sLista *tail;
     int size;
 } Lista;
 
-//prototipação
 Nodo* alocaMemoriaNodo();
 Lista* alocaMemoriaLista();
 Nodo* criaNodo(int);
@@ -43,7 +40,6 @@ int main(){
 }
 
 
-//alocando memoria para o nodo e para lista
 Nodo* alocaMemoriaNodo(){
   return (Nodo*)malloc(sizeof(Nodo));
 }
@@ -75,7 +71,7 @@ Lista* criaLista(){
 int insereElementoNaLista(Lista* lista, Nodo* pivo, int dado){
   Nodo* novo = criaNodo(dado);
   if (novo ==NULL){
-    return -1;//retorna erro
+    return -1;
   }
 	if (pivo == NULL){
       if(lista->size ==0){
