@@ -140,7 +140,7 @@ int encontraElementoNaLista(Lista*lista,Nodo* elementoDesejado){
   if(nodo != NULL){
     while (nodo != NULL){
       if(nodo == elementoDesejado){
-        printf("O elemento desejado é %i", *nodo);
+        printf("O elemento desejado é %i\n", *nodo);
         return 0;
       }
       nodo = nodo->next;
