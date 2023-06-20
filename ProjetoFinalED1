@@ -1,0 +1,208 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define M 53
+#define QTDCARACTERES 16
+
+typedef struct sNodo {
+  char nome[QTDCARACTERES];
+  int posicao;
+  int tabela;
+  struct sNodo *next;
+  struct sNodo *prev;
+} Nodo;
+
+typedef struct sLista {
+  struct sNodo *head;
+  struct sNodo *tail;
+  int size;
+} Lista;
+
+Nodo *alocaMemoriaNodo();
+Lista *alocaMemoriaLista();
+Nodo *criaNodo(char *);
+Lista *criaLista();
+int insereElementoNaLista(Lista *, Nodo *, char *, int, int);
+void percorreListaHeadTail(Lista *, int);
+int hash(char *nome);
+int ascii(char letra);
+Nodo *encontraElementoNaLista(Lista tabelaHash[], char *nome);
+int removeElementoNaLista (Lista *, Nodo *);
+
+void readArquivoTXT(Lista *tabelaHash);
+
+int main() {
+  Lista tabelaHash[M];
+  // Inicializar as listas na tabela hash
+  for (int i = 0; i < M; i++) {
+    tabelaHash[i] = *criaLista();
+  }
+  readArquivoTXT(tabelaHash);
+  // Percorrer e exibir as listas na tabela hash
+  for (int i = 0; i < M; i++) {
+    printf("Lista %d: ", i);
+    percorreListaHeadTail(&tabelaHash[i], i);
+    printf("\n");
+  }
+
+  
+  Nodo *elemento= encontraElementoNaLista (tabelaHash, "JERMINIA");
+  if(elemento != NULL){
+    printf("\nO elemento %s está na lista, na tabela hash %i e na posição %i \n\n",       elemento->nome, elemento->tabela, elemento->posicao);
+  } else{
+    printf("\nO elemento não está na lista\n");
+  }
+
+  int count = 0;
+  for(int i=0; i<M; i++){
+    printf("A tabela hash %i tem %i elementos\n", i, tabelaHash[i].size);
+    count = count + tabelaHash[i].size;
+  }
+
+  Nodo *nodoremove = encontraElementoNaLista (tabelaHash, "JERMINIA");
+  if (nodoremove != NULL){
+      removeElementoNaLista (tabelaHash, nodoremove);
+    }
+  
+  return 0;
+}
+
+void readArquivoTXT(Lista *tabelaHash) {
+  FILE *file = fopen("nomes.txt", "r");
+  char nome[QTDCARACTERES];
+  int posicao = 0;
+  while (fgets(nome, QTDCARACTERES, file) != NULL) {
+    nome[strcspn(nome, "\n")] = '\0';
+    int index = hash(nome);
+    insereElementoNaLista(&tabelaHash[index], tabelaHash[index].tail, nome, posicao, index);
+    posicao++;
+  }
+  fclose(file);
+}
+
+Nodo *alocaMemoriaNodo() {
+  return (Nodo *)malloc(sizeof(Nodo));
+}
+
+Lista *alocaMemoriaLista() {
+  return (Lista *)malloc(sizeof(Lista));
+}
+
+Nodo *criaNodo(char *nome) {
+  Nodo *nodo = alocaMemoriaNodo();
+  if (nodo != NULL) {
+    strcpy(nodo->nome, nome);
+    nodo->next = NULL;
+    nodo->prev = NULL;
+  }
+  return nodo;
+}
+
+Nodo *encontraElementoNaLista(Lista tabelaHash[], char *nome) {
+  int index = hash(nome);
+  Nodo *nodo = tabelaHash[index].head;
+
+  if (nodo != NULL) {
+    while (nodo != NULL) {
+      if (strcmp(nodo->nome, nome) == 0) {
+        return nodo;
+      }
+      nodo = nodo->next;
+    }
+  }
+
+  return NULL;
+}
+
+Lista *criaLista() {
+  Lista *lista = alocaMemoriaLista();
+  if (lista != NULL) {
+    lista->head = NULL;
+    lista->tail = NULL;
+    lista->size = 0;
+  }
+  return lista;
+}
+
+int insereElementoNaLista(Lista *lista, Nodo *pivo, char *nome, int posicao, int tabela) {
+  Nodo *novo = criaNodo(nome);
+  if (pivo == NULL && lista->size != 0) {
+    printf("Elemento pivo só pode ser nulo no primeiro elemento\n");
+    return 0;
+  }
+  if (lista->size == 0) {
+    lista->head = novo;
+    lista->tail = novo;
+  } else {
+    novo->next = pivo->next;
+    novo->prev = pivo;
+
+    if (pivo->next == NULL) {
+      lista->tail = novo;
+    } else {
+      pivo->next->prev = novo;
+    }
+    pivo->next = novo;
+  }
+  novo->posicao = posicao;
+  novo->tabela = tabela;
+  lista->size++;
+  return lista->size;
+}
+
+void percorreListaHeadTail(Lista *lista, int hash) {
+  Nodo *nodo = lista->head;
+  if (nodo != NULL) {
+    while (nodo != NULL) {
+      printf("Hash %d - Elemento %d do hash: %s\n", hash, nodo->posicao, nodo->nome);
+      nodo = nodo->next;
+
+    }
+    printf("Fim da lista\n");
+  } else {
+    printf("Lista está vazia\n");
+  }
+}
+
+int ascii(char letra) {
+  return letra;
+}
+
+int hash(char *nome) {
+  int x = 0;
+  for (int i = 0; i < strlen(nome); i++) {
+    x = x + ascii(nome[i]);
+  }
+  x = x % M;
+  return x;
+}
+
+int removeElementoNaLista (Lista * lista, Nodo * elementoAntigo) {
+
+  if (lista->size == 0){
+      return 0;
+    }else if (elementoAntigo == NULL){
+      return 0;
+    }else {
+      if (lista->head == elementoAntigo){
+    	  lista->head = elementoAntigo->next;
+    	  if (lista->head == NULL){
+    	      lista->tail == NULL;
+    	  }else{
+    	      elementoAntigo->next->prev = NULL;
+    	  }
+	  }else{
+    	  elementoAntigo->prev->next = elementoAntigo->next;
+    	  if (elementoAntigo->next == NULL){
+    	      lista->tail = elementoAntigo->prev;
+    	  }else{
+    	     elementoAntigo->next->prev = elementoAntigo->prev;
+    	  }
+	  }
+      printf("\nNome %s removido com sucesso", elementoAntigo->nome);
+      free (elementoAntigo);
+      lista->size--;
+      return 1;
+    }
+}
