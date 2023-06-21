@@ -29,17 +29,14 @@ int hash(char *nome);
 int ascii(char letra);
 Nodo *encontraElementoNaLista(Lista tabelaHash[], char *nome);
 int removeElementoNaLista (Lista *, Nodo *);
-
 void readArquivoTXT(Lista *tabelaHash);
 
 int main() {
   Lista tabelaHash[M];
-  // Inicializar as listas na tabela hash
   for (int i = 0; i < M; i++) {
     tabelaHash[i] = *criaLista();
   }
   readArquivoTXT(tabelaHash);
-  // Percorrer e exibir as listas na tabela hash
   for (int i = 0; i < M; i++) {
     printf("Lista %d: ", i);
     percorreListaHeadTail(&tabelaHash[i], i);
@@ -54,10 +51,8 @@ int main() {
     printf("\nO elemento não está na lista\n");
   }
 
-  int count = 0;
   for(int i=0; i<M; i++){
     printf("A tabela hash %i tem %i elementos\n", i, tabelaHash[i].size);
-    count = count + tabelaHash[i].size;
   }
 
   Nodo *nodoremove = encontraElementoNaLista (tabelaHash, "JERMINIA");
@@ -99,22 +94,6 @@ Nodo *criaNodo(char *nome) {
   return nodo;
 }
 
-Nodo *encontraElementoNaLista(Lista tabelaHash[], char *nome) {
-  int index = hash(nome);
-  Nodo *nodo = tabelaHash[index].head;
-
-  if (nodo != NULL) {
-    while (nodo != NULL) {
-      if (strcmp(nodo->nome, nome) == 0) {
-        return nodo;
-      }
-      nodo = nodo->next;
-    }
-  }
-
-  return NULL;
-}
-
 Lista *criaLista() {
   Lista *lista = alocaMemoriaLista();
   if (lista != NULL) {
@@ -124,6 +103,20 @@ Lista *criaLista() {
   }
   return lista;
 }
+
+int ascii(char letra) {
+  return letra;
+}
+
+int hash(char *nome) {
+  int x = 0;
+  for (int i = 0; i < strlen(nome); i++) {
+    x = x + ascii(nome[i]);
+  }
+  x = x % M;
+  return x;
+}
+
 
 int insereElementoNaLista(Lista *lista, Nodo *pivo, char *nome, int posicao, int tabela) {
   Nodo *novo = criaNodo(nome);
@@ -165,17 +158,20 @@ void percorreListaHeadTail(Lista *lista, int hash) {
   }
 }
 
-int ascii(char letra) {
-  return letra;
-}
+Nodo *encontraElementoNaLista(Lista tabelaHash[], char *nome) {
+  int index = hash(nome);
+  Nodo *nodo = tabelaHash[index].head;
 
-int hash(char *nome) {
-  int x = 0;
-  for (int i = 0; i < strlen(nome); i++) {
-    x = x + ascii(nome[i]);
+  if (nodo != NULL) {
+    while (nodo != NULL) {
+      if (strcmp(nodo->nome, nome) == 0) {
+        return nodo;
+      }
+      nodo = nodo->next;
+    }
   }
-  x = x % M;
-  return x;
+
+  return NULL;
 }
 
 int removeElementoNaLista (Lista * lista, Nodo * elementoAntigo) {
